@@ -1,30 +1,32 @@
 /************************************************* 
+GitHub: https://github.com/smilefacehh/LIO-SAM-DetailedNote
 Author: lutao2014@163.com
 Date: 2021-02-21 
 --------------------------------------------------
 TransformFusion类
 功能简介：
-    主要功能是订阅激光里程计和imu里程计（计算增量位姿变换），计算当前时刻imu里程计，rviz展示imu里程计轨迹（局部）
+    主要功能是订阅激光里程计（来自MapOptimization）和IMU里程计，根据前一时刻激光里程计，和该时刻到当前时刻的IMU里程计变换增量，计算当前时刻IMU里程计；rviz展示IMU里程计轨迹（局部）。
 
 订阅：
-    1、订阅激光里程计，来自mapOptimization
-    2、订阅imu里程计，来自IMUPreintegration
+    1、订阅激光里程计，来自MapOptimization；
+    2、订阅imu里程计，来自ImuPreintegration。
+
 
 发布：
-    1、发布imu里程计，用于rviz展示
-    2、发布imu里程计轨迹，仅展示最近一帧激光里程计时刻到当前时刻之间的轨迹
+    1、发布IMU里程计，用于rviz展示；
+    2、发布IMU里程计轨迹，仅展示最近一帧激光里程计时刻到当前时刻之间的轨迹。
 --------------------------------------------------
 IMUPreintegration类
 功能简介：
-    1、用激光里程计，两帧激光里程计之间的imu预计分量构建因子图，优化当前帧的状态（包括位姿、速度、偏置）
-    2、以优化后的状态为基础，施加imu预计分量，得到每一时刻的imu里程计
+    1、用激光里程计，两帧激光里程计之间的IMU预计分量构建因子图，优化当前帧的状态（包括位姿、速度、偏置）;
+    2、以优化后的状态为基础，施加IMU预计分量，得到每一时刻的IMU里程计。
 
 订阅：
-    1、订阅imu原始数据，用因子图优化的结果，施加两帧之间的imu预计分量，预测每一时刻（imu频率）的imu里程计
-    2、订阅激光里程计，来自mapOptimization，用两帧之间的imu预计分量构建因子图，优化当前帧位姿（这个位姿仅用于更新每时刻的imu里程计，以及下一次因子图优化）
-        
+    1、订阅IMU原始数据，以因子图优化后的激光里程计为基础，施加两帧之间的IMU预计分量，预测每一时刻（IMU频率）的IMU里程计；
+    2、订阅激光里程计（来自MapOptimization），用两帧之间的IMU预计分量构建因子图，优化当前帧位姿（这个位姿仅用于更新每时刻的IMU里程计，以及下一次因子图优化）。     
+
 发布：
-    1、发布imu里程计
+    1、发布imu里程计；
 **************************************************/ 
 #include "utility.h"
 
@@ -214,6 +216,7 @@ public:
 
     std::mutex mtx;
 
+    // 订阅与发布
     ros::Subscriber subImu;
     ros::Subscriber subOdometry;
     ros::Publisher pubImuOdometry;
@@ -242,6 +245,7 @@ public:
     gtsam::NavState prevState_;
     gtsam::imuBias::ConstantBias prevBias_;
 
+    // imu状态
     gtsam::NavState prevStateOdom;
     gtsam::imuBias::ConstantBias prevBiasOdom;
 
@@ -249,6 +253,7 @@ public:
     double lastImuT_imu = -1;
     double lastImuT_opt = -1;
 
+    // ISAM2优化器
     gtsam::ISAM2 optimizer;
     gtsam::NonlinearFactorGraph graphFactors;
     gtsam::Values graphValues;
@@ -257,6 +262,7 @@ public:
 
     int key = 1;
 
+    // imu-lidar位姿变换
     gtsam::Pose3 imu2Lidar = gtsam::Pose3(gtsam::Rot3(1, 0, 0, 0), gtsam::Point3(-extTrans.x(), -extTrans.y(), -extTrans.z()));
     gtsam::Pose3 lidar2Imu = gtsam::Pose3(gtsam::Rot3(1, 0, 0, 0), gtsam::Point3(extTrans.x(), extTrans.y(), extTrans.z()));
 
