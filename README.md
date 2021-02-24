@@ -1,5 +1,5 @@
 # LIO-SAM-DetailedNote
-LIO-SAM源码详细注释
+LIO-SAM源码详细注释，如果对您有帮助，可以star一下哟~
 
 LIO-SAM的代码十分轻量，只有四个cpp文件，很值得读一读呢。（劝进语~）
 
