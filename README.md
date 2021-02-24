@@ -12,15 +12,13 @@ LIO-SAM的代码十分轻量，只有四个cpp文件，很值得读一读呢。�
 - [LIO-SAM源码解析(三)：IMUPreintegration](https://zhuanlan.zhihu.com/p/352146800)
 - [LIO-SAM源码解析(四)：MapOptimization](https://zhuanlan.zhihu.com/p/352148894)
 
-## 代码介绍
+## 整体流程
 
 代码结构图
 ![Image](https://github.com/smilefacehh/LIO-SAM-DetailedNote/blob/main/system.png)
 
 因子图
 ![Image](https://github.com/smilefacehh/LIO-SAM-DetailedNote/blob/main/factor.png)
-
-### 整体流程
 
 1、激光运动畸变校正。利用当前帧起止时刻之间的IMU数据、IMU里程计数据计算预积分，得到每一时刻的激光点位姿，从而变换到初始时刻激光点坐标系下，实现校正。
 
@@ -32,7 +30,7 @@ LIO-SAM的代码十分轻量，只有四个cpp文件，很值得读一读呢。�
 
 5、闭环检测。在历史关键帧中找候选闭环匹配帧，执行scan-to-map匹配，得到位姿变换，构建闭环因子，加入到因子图中一并优化。
 
-### 一、ImageProjection 激光运动畸变校正
+## 一、激光运动畸变校正（ImageProjection）
 
 **功能简介**
 
@@ -55,7 +53,7 @@ LIO-SAM的代码十分轻量，只有四个cpp文件，很值得读一读呢。�
 2.发布当前帧激光运动畸变校正之后的点云信息，包括点云数据、初始位姿、姿态角、有效点云数据等，发布给FeatureExtraction进行特征提取。
 
 
-### 二、FeatureExtraction 点云特征提取
+## 二、点云特征提取（FeatureExtraction）
 
 **功能简介**
 
@@ -74,9 +72,9 @@ LIO-SAM的代码十分轻量，只有四个cpp文件，很值得读一读呢。�
 3.发布当前激光帧提取的平面点点云，用于rviz展示。
 
 
-### 三、ImuPreintegration IMU预积分
+## 三、IMU预积分（ImuPreintegration）
 
-#### 1.TransformFusion类
+### 1.TransformFusion类
 
 **功能简介**
 
@@ -95,7 +93,7 @@ LIO-SAM的代码十分轻量，只有四个cpp文件，很值得读一读呢。�
 2.发布IMU里程计轨迹，仅展示最近一帧激光里程计时刻到当前时刻之间的轨迹。
 
 
-#### 2. ImuPreintegration类
+### 2. ImuPreintegration类
 
 **功能简介**
 
@@ -114,7 +112,7 @@ LIO-SAM的代码十分轻量，只有四个cpp文件，很值得读一读呢。�
 1.发布imu里程计；
 
 
-### 四、MapOptimization 因子图优化
+## 四、因子图优化（MapOptimization）
 
 **功能简介**
 
