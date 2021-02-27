@@ -1,9 +1,11 @@
 # LIO-SAM-DetailedNote
-LIO-SAM源码详细注释。
+LIO-SAM源码详细注释，3D SLAM融合激光、IMU、GPS，因子图优化。
 
 LIO-SAM的代码十分轻量，只有四个cpp文件，很值得读一读呢。
 
 关于LIO-SAM的论文解读，网上已经有很多文章啦，同系列的LOAM、A-LOAM、LEGO-LOAM等，在网上都可以找到相关的解读文章。所以本文旨在对源代码进行阅读学习，积累一些工程上的经验。这里记录下来，希望可以帮到有需要的同学，如有错误的地方，请您批评指正。
+
+如果对您有帮助，帮我点个star呦~
 
 ## 目录（知乎）
 - [LIO-SAM源码解析：准备篇](https://zhuanlan.zhihu.com/p/352039509)
